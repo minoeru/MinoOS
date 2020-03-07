@@ -1,0 +1,6 @@
+- ディスクイメージ helloos.imgを作るコマンド
+mformat -f 1440 -C -B ipl.bin -i helloos.img ::
+
+- ipl.lstの作成で以下のエラーが発生したため削除。必要になったら解決する。
+ipl.nas: fatal: more than one input file specified: ipl.lst
+

@@ -2,11 +2,10 @@ default :
 	make img
 
 ipl.bin : ipl.nas Makefile
-	../../z_tools/nask ipl.nas ipl.bin ipl.lst
+	nasm ipl.nas -o ipl.bin 
 
 helloos.img : ipl.bin Makefile
-	../../z_tools/edimg   imgin:../../z_tools/fdimg0at.tek \
-		wbinimg src:ipl.bin len:512 from:0 to:0   imgout:helloos.img
+	mformat -f 1440 -C -B ipl.bin -i helloos.img ::
 
 asm :
 	make -r ipl.bin
@@ -25,7 +24,6 @@ install :
 
 clean :
 	rm -f ipl.bin
-	rm -f ipl.lst
 
 src_only :
 	make clean
