@@ -28,8 +28,6 @@ img :
 
 run :
 	$(MAKE) img
-	#$(COPY) haribote.img ../../z_tools/qemu/fdimage0.bin
-	#$(MAKE) -C ../../z_tools/qemu
 	qemu-system-i386 -drive file=haribote.img,format=raw,if=floppy -boot a
 
 install :
