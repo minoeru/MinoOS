@@ -1,0 +1,23 @@
+     1                                  ; naskfunc
+     2                                  ; TAB=4
+     3                                  
+     4                                  ;[FORMAT "WCOFF"]				; オブジェクトファイルを作るモード ; NASMではエラーが出るのでこの行削除
+     5                                  [BITS 32]						; 32ビットモード用の機械語を作らせる
+     6                                  
+     7                                  
+     8                                  ; オブジェクトファイルのための情報
+     9                                  
+    10                                  ;[FILE "naskfunc.nas"]			; ソースファイル名情報 ; NASMではエラーが出るのでこの行削除
+    11                                  
+    12                                  		;GLOBAL	_io_hlt			; このプログラムに含まれる関数名
+    13                                  		GLOBAL	io_hlt			; NASMではエラーが出るので修正
+    14                                  
+    15                                  
+    16                                  ; 以下は実際の関数
+    17                                  
+    18                                  [SECTION .text]		; オブジェクトファイルではこれを書いてからプログラムを書く
+    19                                  
+    20                                  ;_io_hlt:	; void io_hlt(void);
+    21                                  io_hlt:	; void io_hlt(void);	; NASMではエラーが出るので修正
+    22 00000000 F4                      		HLT
+    23 00000001 C3                      		RET
