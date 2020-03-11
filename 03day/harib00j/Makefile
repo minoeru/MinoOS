@@ -22,7 +22,7 @@ naskfunc.o : naskfunc.nas Makefile          # naskfunc.nasのバイナリファ�
 	nasm -g -f elf naskfunc.nas -o naskfunc.o -l naskfunc.lst
 
 bootpack.hrb : bootpack.c hrb.ld naskfunc.o Makefile
-	/usr/local/i386elfgcc/bin/i386-elf-gcc -march=i486 -m32 -nostdlib -T hrb.ld bootpack.c -o bootpack.hrb
+	/usr/local/i386elfgcc/bin/i386-elf-gcc -march=i486 -m32 -nostdlib -T hrb.ld -g bootpack.c naskfunc.o -o bootpack.hrb
 
 haribote.sys : asmhead.bin bootpack.hrb Makefile
 	cat asmhead.bin bootpack.hrb > haribote.sys
