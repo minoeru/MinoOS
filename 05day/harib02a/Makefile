@@ -43,6 +43,7 @@ run :
 clean :
 	-$(DEL) *.bin
 	-$(DEL) *.lst
+	-$(DEL) *.o
 	-$(DEL) *.sys
 	-$(DEL) *.hrb
 
