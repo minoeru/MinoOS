@@ -1,3 +1,6 @@
 run :
-	cp helloos.img ../../z_tools/qemu/fdimage0.bin
-	make -C ../../z_tools/qemu
+	nasm helloos.nas -o helloos.img
+	qemu-system-i386 -drive file=helloos.img,format=raw,if=floppy -boot a
+
+clean :
+	rm -f helloos.img
