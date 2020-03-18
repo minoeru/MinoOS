@@ -30,10 +30,6 @@ run :
 	$(MAKE) img
 	qemu-system-i386 -drive file=haribote.img,format=raw,if=floppy -boot a
 
-install :
-	$(MAKE) img
-	$(IMGTOL) w a: haribote.img
-
 clean :
 	-$(DEL) ipl10.bin
 	-$(DEL) ipl10.lst

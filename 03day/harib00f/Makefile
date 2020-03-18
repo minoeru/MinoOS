@@ -1,7 +1,4 @@
-TOOLPATH 	= ../../z_tools/
 MAKE 		= make -r
-IMGTOL 		= $(TOOLPATH)imgtol
-COPY 		= cp
 DEL 		= rm -f
 
 #デフォルト動作
@@ -12,7 +9,7 @@ default :
 #ファイル生成規則
 
 ipl.bin : ipl.nas Makefile
-	nasm ipl.nas -o ipl.bin -l ipl10.lst
+	nasm ipl.nas -o ipl.bin -l ipl.lst
 
 haribote.sys : haribote.nas Makefile
 	nasm haribote.nas -o haribote.sys -l haribote.lst
@@ -33,13 +30,9 @@ run :
 	$(MAKE) img
 	qemu-system-i386 -drive file=haribote.img,format=raw,if=floppy -boot a
 
-install :
-	$(MAKE) img
-	$(IMGTOL) w a: haribote.img
-
 clean :
-	-$(DEL) ipl10.bin
-	-$(DEL) ipl10.lst
+	-$(DEL) ipl.bin
+	-$(DEL) ipl.lst
 	-$(DEL) haribote.sys
 	-$(DEL) haribote.lst
 

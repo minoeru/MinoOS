@@ -1,8 +1,4 @@
-TOOLPATH 	= ../../z_tools/
-
 MAKE 		= make -r
-IMGTOL 		= $(TOOLPATH)imgtol
-COPY 		= cp
 DEL 		= rm -f
 
 #デフォルト動作
@@ -45,6 +41,7 @@ clean :
 	-$(DEL) *.lst
 	-$(DEL) *.sys
 	-$(DEL) *.hrb
+	-$(DEL) *.o
 
 src_only :
 	$(MAKE) clean

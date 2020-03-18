@@ -1,7 +1,3 @@
-- haribo00fから
-  - Makefileにlstの生成を追加。
-  - QEMUの実行方法を変更。
-  - 暇があれば前のも直す。
 - haribo00iから
   - https://qiita.com/tatsumack/items/9f1ae8dee4dbb33b7406、を参考にしてクロスコンパイル。
   - https://vanya.jp.net/os/haribote.html#hrbをリンカとして使用 

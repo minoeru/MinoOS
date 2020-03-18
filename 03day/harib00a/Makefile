@@ -1,7 +1,4 @@
-TOOLPATH 	= ../../z_tools/
 MAKE 		= make -r
-IMGTOL 		= $(TOOLPATH)imgtol
-COPY 		= cp
 DEL 		= rm -f
 
 #デフォルト動作
@@ -12,7 +9,7 @@ default :
 #ファイル生成規則
 
 ipl.bin : ipl.nas Makefile
-	nasm ipl.nas -o ipl.bin 
+	nasm ipl.nas -o ipl.bin -l ipl.lst
 
 helloos.img : ipl.bin Makefile
 	mformat -f 1440 -C -B ipl.bin -i helloos.img ::
@@ -27,15 +24,12 @@ img :
 
 run :
 	$(MAKE) img
-	$(COPY) helloos.img ../../z_tools/qemu/fdimage0.bin
-	$(MAKE) -C ../../z_tools/qemu
+	qemu-system-i386 -drive file=helloos.img,format=raw,if=floppy -boot a
 
-install :
-	$(MAKE) img
-	$(IMGTOL) w a: helloos.img
 
 clean :
 	-$(DEL) ipl.bin
+	-$(DEL) ipl.lst
 
 src_only :
 	$(MAKE) clean
