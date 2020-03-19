@@ -1,16 +1,20 @@
 #include "bootpack.h"
 
+struct MOUSE_DEC {
+  unsigned char buf[3],phase;
+};
 extern struct  FIFO8 keyfifo,mousefifo;
 void enable_mouse(void);
 void init_keyboard(void);
+int mouse_decode(struct MOUSE_DEC *mdec, unsigned char dat);
 
 void HariMain(void){
   
   struct BOOTINFO *binfo = (struct BOOTINFO *) ADR_BOOTINFO;
   char s[40], mcursor[256],keybuf[32], mousebuf[128];
   int mx,my,i;
-  unsigned char mouse_dbuf[3], mouse_phase;
-  
+  struct MOUSE_DEC mdec;
+
   init_gdtidt();
   init_pic();
   io_sti(); //CPUの割り込み禁止を解除
@@ -32,7 +36,6 @@ void HariMain(void){
   putfonts8_asc(binfo->vram, binfo->scrnx, 0, 0, COL8_FFFFFF, s);
   
   enable_mouse();
-  mouse_phase = 0;
 
   for(;;){
     io_cli();
@@ -50,26 +53,11 @@ void HariMain(void){
       else if (fifo8_status(&mousefifo) != 0){
         i = fifo8_get(&mousefifo);
 				io_sti();
-        if (mouse_phase == 0){
-          if (i == 0xfa) { //マウスの0xfaを待っている段階
-            mouse_phase = 1;
-          }
-        }
-        else if (mouse_phase == 1){ //マウスの1バイト目を待っている段階
-          mouse_dbuf[0] = i; 
-          mouse_phase = 2;
-        }
-        else if (mouse_phase == 2){ //マウスの2バイト目を待っている段階
-          mouse_dbuf[1] = i; 
-          mouse_phase = 3;
-        }
-        else if (mouse_phase == 3){ //マウスの3バイト目を待っている段階 
-          mouse_dbuf[2] = i; 
-          mouse_phase = 1;
-          sprintf(s, "%x %x %x", mouse_dbuf[0], mouse_dbuf[1], mouse_dbuf[2]);
+        if (mouse_decode(&mdec, i) != 0){
+          sprintf(s, "%x %x %x", mdec.buf[0], mdec.buf[1], mdec.buf[2]);
           boxfill8(binfo->vram, binfo->scrnx, COL8_008484, 32, 16, 32 + 8 * 8 - 1, 31);
           putfonts8_asc(binfo->vram, binfo->scrnx, 32, 16, COL8_FFFFFF, s);
-        }				
+        }
       }
     }
   }
@@ -108,4 +96,29 @@ void enable_mouse(void){ // マウス有効
 	wait_KBC_sendready();
 	io_out8(PORT_KEYDAT, MOUSECMD_ENABLE);
 	return; // うまくいくとACK(0xfa)が送信されてくる
+}
+
+int mouse_decode(struct MOUSE_DEC *mdec, unsigned char dat){
+  if (mdec->phase == 0){
+    if (dat == 0xfa) { //マウスの0xfaを待っている段階
+    mdec->phase = 1;
+    }
+    return 0;
+  }
+  if (mdec->phase == 1){ //マウスの1バイト目を待っている段階
+    mdec->buf[0] = dat; 
+    mdec->phase = 2;
+    return 0;
+  }
+  if (mdec->phase == 2){ //マウスの2バイト目を待っている段階
+    mdec->buf[1] = dat; 
+    mdec->phase = 3;
+    return 0;
+  }
+  if (mdec->phase == 3){ //マウスの3バイト目を待っている段階
+    mdec->buf[2] = dat; 
+    mdec->phase = 1;
+    return 1;
+  }
+  return -1;
 }
