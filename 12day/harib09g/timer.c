@@ -55,7 +55,7 @@ void timer_settime(struct TIMER *timer, unsigned int timeout){
         if (timerctl.timers[i]->timeout >= timer->timeout) break;
     }
     for (j = timerctl.using; j > i; j--){
-        timerctl.timers[j] = timerctl.timers[j - i];
+        timerctl.timers[j] = timerctl.timers[j - 1];
     }
     timerctl.using++;
     timerctl.timers[i] = timer;
