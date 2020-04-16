@@ -457,15 +457,12 @@ int *hrb_api(int edi, int esi, int ebp, int esp, int ebx, int edx, int ecx, int 
 	}
 	else if (edx == 21) {
 		for (i = 0; i < 8; i++) {
-			if (task->fhandle[i].buf == 0) {
-				break;
-			}
+			if (task->fhandle[i].buf == 0) break;
 		}
 		fh = &task->fhandle[i];
 		reg[7] = 0;
 		if (i < 8) {
-			finfo = file_search((char *) ebx + ds_base,
-					(struct FILEINFO *) (ADR_DISKIMG + 0x002600), 224);
+			finfo = file_search((char *) ebx + ds_base,(struct FILEINFO *) (ADR_DISKIMG + 0x002600), 224);
 			if (finfo != 0) {
 				reg[7] = (int) fh;
 				fh->buf = (char *) memman_alloc_4k(memman, finfo->size);

@@ -8,7 +8,7 @@ default :
 
 haribote.img : haribote/ipl10.bin haribote/haribote.sys Makefile a/a.hrb hello3/hello3.hrb hello4/hello4.hrb hello5/hello5.hrb winhelo/winhelo.hrb winhelo2/winhelo2.hrb winhelo3/winhelo3.hrb star1/star1.hrb stars/stars.hrb stars2/stars2.hrb lines/lines.hrb walk/walk.hrb beepdown/beepdown.hrb color/color.hrb color2/color2.hrb sosu/sosu.hrb sosu2/sosu2.hrb sosu3/sosu3.hrb typeipl/typeipl.hrb
 	mformat -f 1440 -C -B haribote/ipl10.bin -i haribote/haribote.img ::
-	mcopy -i haribote//haribote.img haribote/haribote.sys haribote/ipl10.nas Makefile a/a.hrb hello3/hello3.hrb hello4/hello4.hrb hello5/hello5.hrb winhelo/winhelo.hrb winhelo2/winhelo2.hrb winhelo3/winhelo3.hrb star1/star1.hrb stars/stars.hrb stars2/stars2.hrb lines/lines.hrb walk/walk.hrb beepdown/beepdown.hrb color/color.hrb color2/color2.hrb sosu/sosu.hrb sosu2/sosu2.hrb sosu3/sosu3.hrb typeipl/typeipl.hrb ::
+	mcopy -i haribote/haribote.img haribote/haribote.sys haribote/ipl10.nas Makefile a/a.hrb hello3/hello3.hrb hello4/hello4.hrb hello5/hello5.hrb winhelo/winhelo.hrb winhelo2/winhelo2.hrb winhelo3/winhelo3.hrb star1/star1.hrb stars/stars.hrb stars2/stars2.hrb lines/lines.hrb walk/walk.hrb beepdown/beepdown.hrb color/color.hrb color2/color2.hrb sosu/sosu.hrb sosu2/sosu2.hrb sosu3/sosu3.hrb typeipl/typeipl.hrb ::
 #コマンド
 
 img :

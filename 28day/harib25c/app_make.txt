@@ -24,10 +24,6 @@ default :
 $(APP).hrb : $(APP).o Makefile ../app_make.txt
 	$(GCC) $(CFLAGS) -march=i486 -nostdlib -T ../a.ld -g $(APP).o $(OBJS_API) -o $@
 
-haribote.img : ipl10.bin haribote.sys a.hrb hello3.hrb hello4.hrb hello5.hrb winhelo.hrb winhelo2.hrb winhelo3.hrb star1.hrb stars.hrb stars2.hrb lines.hrb walk.hrb beepdown.hrb color.hrb color2.hrb  Makefile
-	mformat -f 1440 -C -B ipl10.bin -i haribote.img ::
-	mcopy -i haribote.img haribote.sys ipl10.nas Makefile a.hrb hello3.hrb hello4.hrb hello5.hrb winhelo.hrb winhelo2.hrb winhelo3.hrb star1.hrb stars.hrb stars2.hrb lines.hrb walk.hrb beepdown.hrb color.hrb color2.hrb ::
-
 # 一般規則
 
 %.o : %.c
