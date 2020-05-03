@@ -23,12 +23,9 @@ void console_task(struct SHEET *sheet, int memtotal){
   	  timer_settime(cons.timer, 50);
   }
   file_readfat(fat, (unsigned char *) (ADR_DISKIMG + 0x000200));
-  for (i = 0; i < 8; i++){
-	  fhandle[i].buf = 0;
-  }
+  for (i = 0; i < 8; i++) fhandle[i].buf = 0;
   task->fhandle = fhandle;
   task->fat = fat;
-
   if (nihongo[4096] != 0xff) task->langmode = 1;
   else task->langmode = 0;
   task->langbyte1 = 0;
@@ -40,7 +37,7 @@ void console_task(struct SHEET *sheet, int memtotal){
     io_cli();
     if (fifo32_status(&task->fifo) == 0){
       task_sleep(task);
-      io_sti();//io_stiだと重くなる->stihlt->sleepを使ってからはstiで良くなった
+      io_sti();
     }
     else {
       i = fifo32_get(&task->fifo);
@@ -94,26 +91,26 @@ void console_task(struct SHEET *sheet, int memtotal){
 }
 
 void cons_putchar(struct CONSOLE *cons, int chr, char move){
-  char s[2];
+	char s[2];
 	s[0] = chr;
 	s[1] = 0;
-  if (s[0] == 0x09){ //Tab
-    for (;;) {
+	if (s[0] == 0x09){ //Tab
+		for (;;) {
 			if (cons->sht != 0) putfonts8_asc_sht(cons->sht, cons->cur_x, cons->cur_y, COL8_FFFFFF, COL8_000000, " ", 1);
 			cons->cur_x += 8;
 			if (cons->cur_x == 8 + 240) cons_newline(cons);
 			if (((cons->cur_x - 8) & 0x1f) == 0) break;	//32で割り切れたらbreak
 		}
-  }
-  else if (s[0] == 0x0a) cons_newline(cons);	//改行 
-  else if (s[0] == 0x0d){} //復帰
-  else {
-		if (cons->sht != 0) putfonts8_asc_sht(cons->sht, cons->cur_x, cons->cur_y, COL8_FFFFFF, COL8_000000, s, 1);
-		if (move != 0) { //move=0ならカーソルを進めない
+	}
+  	else if (s[0] == 0x0a) cons_newline(cons);	//改行 
+  	else if (s[0] == 0x0d){} //復帰
+  	else{
+		  if (cons->sht != 0) putfonts8_asc_sht(cons->sht, cons->cur_x, cons->cur_y, COL8_FFFFFF, COL8_000000, s, 1);
+		  if (move != 0) { //move=0ならカーソルを進めない
 			cons->cur_x += 8;
 			if (cons->cur_x == 8 + 240) cons_newline(cons);
+		  }
 		}
-	}
 	return;
 }
 
@@ -125,14 +122,10 @@ void cons_newline(struct CONSOLE *cons){
 	else {
 		if (sheet != 0){
 			for (y = 28; y < 28 + 112; y++) {
-				for (x = 8; x < 8 + 240; x++) {
-					sheet->buf[x + y * sheet->bxsize] = sheet->buf[x + (y + 16) * sheet->bxsize];
-				}
+				for (x = 8; x < 8 + 240; x++) sheet->buf[x + y * sheet->bxsize] = sheet->buf[x + (y + 16) * sheet->bxsize];
 			}
 			for (y = 28 + 112; y < 28 + 128; y++) {
-				for (x = 8; x < 8 + 240; x++) {
-					sheet->buf[x + y * sheet->bxsize] = COL8_000000;
-				}
+				for (x = 8; x < 8 + 240; x++) sheet->buf[x + y * sheet->bxsize] = COL8_000000;
 			}
 			sheet_refresh(sheet, 8, 28, 8 + 240, 28 + 128);
 		}
@@ -143,16 +136,12 @@ void cons_newline(struct CONSOLE *cons){
 }
 
 void cons_putstr0(struct CONSOLE *cons, char *s){
-	for (; *s != 0; s++) {
-		cons_putchar(cons, *s, 1);
-	}
+	for (; *s != 0; s++) cons_putchar(cons, *s, 1);
 	return;
 }
 
 void cons_putstr1(struct CONSOLE *cons, char *s, int l){
-	for (int i = 0; i < l; i++) {
-		cons_putchar(cons, s[i], 1);
-	}
+	for (int i = 0; i < l; i++) cons_putchar(cons, s[i], 1);
 	return;
 }
 
@@ -167,11 +156,7 @@ void cons_runcmd(char *cmdline, struct CONSOLE *cons, int *fat, int memtotal){
 	else if (strncmp(cmdline, "bash ", 5) == 0) cmd_bash(cons, cmdline, memtotal);
 	else if (strncmp(cmdline, "ncst ", 5) == 0) cmd_ncst(cons, cmdline, memtotal);
 	else if (strncmp(cmdline, "langmode ", 9) == 0) cmd_langmode(cons, cmdline);
-	else if (cmdline[0] != 0) {
-		if (cmd_app(cons, fat, cmdline) == 0){
-			cons_putstr0(cons, "command not found.\n\n");
-		}
-	}
+	else if (cmdline[0] != 0 && cmd_app(cons, fat, cmdline) == 0) cons_putstr0(cons, "command not found.\n\n");
 	return;
 }
 
@@ -187,9 +172,7 @@ void cmd_clear(struct CONSOLE *cons){
 	int x, y;
 	struct SHEET *sheet = cons->sht;
 	for (y = 28; y < 28 + 128; y++) {
-		for (x = 8; x < 8 + 240; x++) {
-			sheet->buf[x + y * sheet->bxsize] = COL8_000000;
-		}
+		for (x = 8; x < 8 + 240; x++) sheet->buf[x + y * sheet->bxsize] = COL8_000000;
 	}
 	sheet_refresh(sheet, 8, 28, 8 + 240, 28 + 128);
 	cons->cur_y = 28;
@@ -205,9 +188,7 @@ void cmd_ls(struct CONSOLE *cons){
 		if (finfo[i].name[0] != 0xe5) {
 			if ((finfo[i].type & 0x18) == 0) {
 				sprintf(s, "filename.ext   %d\n", finfo[i].size);
-				for (j = 0; j < 8; j++) {
-					s[j] = finfo[i].name[j];
-				}
+				for (j = 0; j < 8; j++) s[j] = finfo[i].name[j];
 				s[ 9] = finfo[i].ext[0];
 				s[10] = finfo[i].ext[1];
 				s[11] = finfo[i].ext[2];
@@ -247,9 +228,7 @@ void cmd_exit(struct CONSOLE *cons, int *fat){
 	if (cons->sht != 0) fifo32_put(fifo, cons->sht - shtctl->sheets0 + 768);
 	else fifo32_put(fifo, cons->sht - shtctl->sheets0 + 1024);
 	io_sti();
-	for (;;) {
-		task_sleep(task);
-	}
+	for (;;) task_sleep(task);
 }
 
 void cmd_bash(struct CONSOLE *cons, char *cmdline, int memtotal){
@@ -259,9 +238,7 @@ void cmd_bash(struct CONSOLE *cons, char *cmdline, int memtotal){
 	int i;
 	sheet_slide(sht, 32, 4);
 	sheet_updown(sht, shtctl->top);
-	for (i = 5; cmdline[i] != 0; i++) {
-		fifo32_put(fifo, cmdline[i] + 256);
-	}
+	for (i = 5; cmdline[i] != 0; i++) fifo32_put(fifo, cmdline[i] + 256);
 	fifo32_put(fifo, 10 + 256); //Enter
 	cons_newline(cons);
 	return;
@@ -271,15 +248,13 @@ void cmd_ncst(struct CONSOLE *cons, char *cmdline, int memtotal){
 	struct TASK *task = open_constask(0, memtotal);
 	struct FIFO32 *fifo = &task->fifo;
 	int i;
-	for (i = 5; cmdline[i] != 0; i++) {
-		fifo32_put(fifo, cmdline[i] + 256);
-	}
+	for (i = 5; cmdline[i] != 0; i++) fifo32_put(fifo, cmdline[i] + 256);
 	fifo32_put(fifo, 10 + 256);	//Enter
 	cons_newline(cons);
 	return;
 }
 
-void cmd_langmode(struct CONSOLE *cons, char *cmdline){
+void cmd_langmode(struct CONSOLE *cons, char *cmdline){ //0:英語 1:日本語 2:漢字
 	struct TASK *task = task_now();
 	unsigned char mode = cmdline[9] - '0';
 	if (mode <= 2) task->langmode = mode;
@@ -291,7 +266,6 @@ void cmd_langmode(struct CONSOLE *cons, char *cmdline){
 int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline){
 	struct MEMMAN *memman = (struct MEMMAN *) MEMMAN_ADDR;
 	struct FILEINFO *finfo;
-	struct SEGMENT_DESCRIPTOR *gdt = (struct SEGMENT_DESCRIPTOR *) ADR_GDT;
 	char name[18], *p, *q;
 	struct TASK *task = task_now();
 	int i, segsiz, datsiz, esp, dathrb;
@@ -329,9 +303,7 @@ int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline){
 			task->ds_base = (int) q;
 			set_segmdesc(task->ldt + 0, finfo->size - 1, (int) p, AR_CODE32_ER + 0x60);
 			set_segmdesc(task->ldt + 1, segsiz - 1,     (int) q, AR_DATA32_RW + 0x60);
-			for (i = 0; i < datsiz; i++){
-				q[esp + i] = p[dathrb + i];
-			}
+			for (i = 0; i < datsiz; i++) q[esp + i] = p[dathrb + i];
 			start_app(0x1b, 0 * 8 + 4, esp, 1 * 8 + 4, &(task->tss.esp0));
 			shtctl = (struct SHTCTL *) *((int *) 0x0fe4);
 			for (i = 0; i < MAX_SHEETS; i++){
@@ -489,9 +461,7 @@ int *hrb_api(int edi, int esi, int ebp, int esp, int ebx, int edx, int ecx, int 
 		}
 	}
 	else if (edx == 21) {
-		for (i = 0; i < 8; i++) {
-			if (task->fhandle[i].buf == 0) break;
-		}
+		for (i = 0; i < 8; i++) if (task->fhandle[i].buf == 0) break;
 		fh = &task->fhandle[i];
 		reg[7] = 0;
 		if (i < 8) {

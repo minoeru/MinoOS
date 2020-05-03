@@ -1,0 +1,1 @@
+timer関係は、timer_alloc()の際にreg[7]にint型の値を入れてtimer_init()の際に(struct TIMER *)でキャスト変換する形を取ったが、うまく行ってないっぽいので、TIMER型を使うと良い。かも？

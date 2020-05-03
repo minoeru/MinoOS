@@ -1,14 +1,11 @@
 APP      = invader
+APILIBPATH   = ../apilib
 
-OBJS_API =	../apilib/api001.o ../apilib/api002.o ../apilib/api003.o ../apilib/api004.o ../apilib/api005.o ../apilib/api006.o \
-			../apilib/api007.o ../apilib/api008.o ../apilib/api009.o ../apilib/api010.o ../apilib/api011.o ../apilib/api012.o \
-			../apilib/api013.o ../apilib/api014.o ../apilib/api015.o ../apilib/api016.o ../apilib/api017.o ../apilib/api018.o \
-			../apilib/api019.o ../apilib/api020.o ../apilib/api021.o ../apilib/api022.o ../apilib/api023.o ../apilib/api024.o \
-			../apilib/api025.o ../apilib/api026.o ../apilib/api027.o ../apilib/alloca.o
-
-
-APILIBPATH   = ../apilib/
-HARIBOTEPATH = ../haribote/
+OBJS_API =	$(APILIBPATH)/api001.o $(APILIBPATH)/api002.o $(APILIBPATH)/api003.o $(APILIBPATH)/api004.o $(APILIBPATH)/api005.o $(APILIBPATH)/api006.o \
+			$(APILIBPATH)/api007.o $(APILIBPATH)/api008.o $(APILIBPATH)/api009.o $(APILIBPATH)/api010.o $(APILIBPATH)/api011.o $(APILIBPATH)/api012.o \
+			$(APILIBPATH)/api013.o $(APILIBPATH)/api014.o $(APILIBPATH)/api015.o $(APILIBPATH)/api016.o $(APILIBPATH)/api017.o $(APILIBPATH)/api018.o \
+			$(APILIBPATH)/api019.o $(APILIBPATH)/api020.o $(APILIBPATH)/api021.o $(APILIBPATH)/api022.o $(APILIBPATH)/api023.o $(APILIBPATH)/api024.o \
+			$(APILIBPATH)/api025.o $(APILIBPATH)/api026.o $(APILIBPATH)/api027.o $(APILIBPATH)/alloca.o
 
 MAKE 		= make -r
 DEL 		= rm -f
@@ -36,17 +33,10 @@ $(APP).hrb : $(APP).o Makefile ../app_make.txt mysprintf.o
 %.o : %.c
 	$(GCC) $(CFLAGS) -c $*.c -o $*.o
 
-%.o : %.nas
-	nasm -g -f elf $*.nas -o $*.o
-
 #コマンド
 
-
 clean :
-	-$(DEL) *.bin
-	-$(DEL) *.lst
 	-$(DEL) *.o
-	-$(DEL) *.sys
 	-$(DEL) *.hrb
 	-$(DEL) hankaku.c
 	-$(DEL) convHankakuTxt
